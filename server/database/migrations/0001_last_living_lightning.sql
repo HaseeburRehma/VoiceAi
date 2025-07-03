@@ -1,0 +1,3 @@
+-- Migration already applied in database
+-- Columns and indexes already exist
+-- This migration is marked as complete

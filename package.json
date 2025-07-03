@@ -1,0 +1,50 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "npx nuxthub preview",
+    "deploy": "npx nuxthub deploy",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "db:generate": "drizzle-kit generate"
+  },
+  "dependencies": {
+    "@iconify-json/lucide": "^1.2.15",
+    "@iconify-json/simple-icons": "^1.2.12",
+    "@nuxt/eslint": "^0.7.1",
+    "@nuxt/ui": "3.0.0-alpha.9",
+    "@nuxthub/core": "^0.8.7",
+    "@vueuse/core": "^11.3.0",
+    "better-sqlite3": "^12.2.0",
+    "drizzle-orm": "0.36.4",
+    "drizzle-zod": "^0.5.1",
+    "h3-zod": "^0.5.3",
+    "nodemailer": "^7.0.4",
+    "nuxt": "^3.14.1592",
+    "nuxt-auth-utils": "^0.5.5",
+    "openai": "^5.8.2",
+    "vue": "^3.5.13",
+    "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250702.0",
+    "@nuxt/eslint-config": "^0.7.1",
+    "drizzle-kit": "^0.28.1",
+    "eslint": "^9.15.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.2",
+    "vue-tsc": "^2.1.10",
+    "wrangler": "^3.90.0"
+  },
+  "packageManager": "pnpm@9.12.2",
+  "pnpm": {
+    "overrides": {
+      "drizzle-orm": "0.36.4",
+      "better-sqlite3>drizzle-orm": "0.36.4"
+    }
+  }
+}
