@@ -1,7 +1,7 @@
 import { defineEventHandler, createError, readBody, getRouterParam } from 'h3';
 import { z } from 'zod';
-import { localDb, tables, and, eq } from '../../utils/localDb';
 import { notePatchSchema } from '#shared/schemas/note.schema';
+import { getDb, tables, sql, eq, desc, and } from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -17,7 +17,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'No fields to update' });
   }
 
-  const existing = await localDb
+  const existing = getDb()
     .select()
     .from(tables.notes)
     .where(and(eq(tables.notes.id, id), eq(tables.notes.userId, user.id)))
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const result = await localDb
+    const result = getDb()
       .update(tables.notes)
       .set(updates as any)
       .where(and(eq(tables.notes.id, id), eq(tables.notes.userId, user.id)));

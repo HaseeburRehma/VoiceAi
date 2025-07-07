@@ -4,7 +4,8 @@
 Local Whisper transcription/translation (no API key needed).
 Prints only the transcript text to stdout.
 """
-import sys
+
+import sys, io
 import argparse
 import os
 import subprocess

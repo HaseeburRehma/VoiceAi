@@ -1,6 +1,6 @@
 import { signUpSchema } from "#shared/schemas/auth.schema";
-import { localDb, tables } from "../../utils/localDb";
 import { createError, defineEventHandler, readValidatedBody, setResponseStatus } from "h3";
+import { getDb, tables, sql, eq, desc, and } from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
   const { name, username, password, email } = await readValidatedBody(
@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   const hashedPassword = await hashPassword(password);
 
   try {
-    const res = await localDb
+    const res = getDb()
       .insert(tables.users)
       .values({
         name,

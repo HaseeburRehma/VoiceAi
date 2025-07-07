@@ -1,14 +1,14 @@
 import { defineEventHandler, createError, setResponseStatus, readBody } from 'h3';
 import { noteSchema } from '#shared/schemas/note.schema';
-import { localDb, tables, eq } from '../../utils/localDb';
 import { sendNoteNotification } from '../../utils/mailer';
+import { getDb, tables, sql, eq, desc, and } from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
   // 1) Auth
   const { user } = await requireUserSession(event);
 
   // 2) Load full user record so we get email
-  const dbUser = await localDb
+  const dbUser = getDb()
     .select({ email: tables.users.email })
     .from(tables.users)
     .where(eq(tables.users.id, user.id))

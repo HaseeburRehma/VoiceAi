@@ -43,6 +43,11 @@ const items = [
   ],
   [
     {
+      label: "Dialer",
+      icon: "i-lucide-phone",
+      to: "/dialer",
+    },
+    {
       label: "Notes",
       icon: "i-lucide-file-text",
       to: "/notes",

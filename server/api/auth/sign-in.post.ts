@@ -1,6 +1,6 @@
 import { signInSchema } from "#shared/schemas/auth.schema";
-import { localDb, tables, eq } from "../../utils/localDb";
 import { createError, defineEventHandler, readValidatedBody } from "h3";
+import { getDb, tables, sql, eq, desc, and } from '../../utils/db'
 
 const invalidCredentialsError = createError({
   statusCode: 401,
@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
     signInSchema.parse,
   );
 
-  const dbUser = await localDb
+  const dbUser = getDb()
     .select()
     .from(tables.users)
     .where(eq(tables.users.username, username))

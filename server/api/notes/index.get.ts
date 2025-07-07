@@ -1,11 +1,11 @@
 import { defineEventHandler, createError } from 'h3';
-import { localDb, tables, eq, desc } from '../../utils/localDb';
+import { getDb, tables, sql, eq, desc, and } from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
 
   try {
-    return await localDb
+    return await getDb()
       .select()
       .from(tables.notes)
       .where(eq(tables.notes.userId, user.id))

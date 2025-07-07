@@ -1,6 +1,6 @@
 import { defineEventHandler, createError, getRouterParam } from "h3";
 import { z } from "zod";
-import { localDb, tables, and, eq } from "../../utils/localDb";
+import { getDb, tables, sql, eq, desc, and } from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // fetch to delete blobs
-  const note = await localDb
+  const note = getdb()
     .select()
     .from(tables.notes)
     .where(and(eq(tables.notes.id, id), eq(tables.notes.userId, user.id)))
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const result = await localDb
+    const result = getDb()
       .delete(tables.notes)
       .where(and(eq(tables.notes.id, id), eq(tables.notes.userId, user.id)));
 

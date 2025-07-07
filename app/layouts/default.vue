@@ -58,6 +58,12 @@ const links = [
     onSelect: hideSlideover,
   },
   {
+     label: "Dialer",
+     icon: "i-lucide-phone",
+     to: "/dialer",
+     onSelect: hideSlideover,
+   },
+  {
     label: "Settings",
     icon: "i-lucide-settings",
     to: "/settings",
