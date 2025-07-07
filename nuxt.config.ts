@@ -2,14 +2,9 @@ export default defineNuxtConfig({
   modules: ["@nuxthub/core", "@nuxt/eslint", "nuxt-auth-utils", "@nuxt/ui"],
  // Single, unified Nitro section:
   nitro: {
-    // We are deploying to Cloudflare Pages via nuxthub,
-    // but we do NOT want the built-in D1 plugin.
-    preset: 'cloudflare-pages',
-    plugins: {
-      // This is the actual plugin name Nitro uses under the hood—
-      // not "nitropack-plugin-cloudflare-pages-d1".
-      "@nitro/plugin-cloudflare-pages-d1": false
-    }
+    preset: process.env.CF_PAGES_ENV === "true"
+      ? "cloudflare-pages"
+      : undefined
   },
   devtools: { enabled: true },
 
