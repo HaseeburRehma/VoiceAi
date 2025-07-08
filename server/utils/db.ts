@@ -1,34 +1,29 @@
 // server/utils/db.ts
-import { drizzle } from 'drizzle-orm/d1'    // only D1-driver here
-import * as schema from '../database/schema'
+import { drizzle as drizzleD1 } from 'drizzle-orm/d1'
+import * as schema             from '../database/schema'
 
 let _db: any = null
 
-/**
- * Returns a Drizzle client.
- * In production (Pages) it uses the globalThis.DB D1 binding;
- * in local dev it dynamically pulls in better-sqlite3.
- */
 export async function getDb() {
   if (_db) return _db
 
-  // 1) pages() D1 binding
+  // 1) In production on Pages, CF will inject DB
   const d1 = (globalThis as any).DB
   if (d1?.prepare) {
-    _db = drizzle(d1, { schema })
+    _db = drizzleD1(d1, { schema })
     return _db
   }
 
-  // 2) local dev fallback
-  if (process.env.NODE_ENV !== 'production') {
-    // only now do we pull in the node‐only packages
-    const { default: Database } = await import('better-sqlite3')
-    const { drizzle: drizzleSQLite } = await import('drizzle-orm/better-sqlite3')
-    const { resolve } = await import('node:path')
+  // 2) In local dev, use SQLite — Vite will inline this branch only when DEV=true
+  if (import.meta.env.DEV) {
+    // cast the dynamically imported modules to any so TS won't complain
+    const sqlitePkg: any         = await import('drizzle-orm/better-sqlite3')
+    const Database: any          = (await import('better-sqlite3')).default
+    const path: any              = await import('path')
 
-    const file   = resolve(process.cwd(), 'dev.sqlite')
+    const file   = path.resolve(process.cwd(), 'dev.sqlite')
     const sqlite = new Database(file)
-    _db = drizzleSQLite(sqlite, { schema })
+    _db = sqlitePkg.drizzle(sqlite, { schema })
     return _db
   }
 
