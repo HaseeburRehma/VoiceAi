@@ -1,7 +1,6 @@
 // src/server/api/notes/get.ts
 import { defineEventHandler, createError } from 'h3'
 import { getDb, tables } from '../../utils/db'
-import { eq, desc } from 'drizzle-orm/d1'
 
 export default defineEventHandler(async (event) => {
   // 1) Authenticate

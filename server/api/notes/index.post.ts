@@ -8,7 +8,6 @@ import {
 import { noteSchema } from '#shared/schemas/note.schema'
 import { sendNoteNotification } from '../../utils/mailer'
 import { getDb, tables } from '../../utils/db'
-import { eq } from 'drizzle-orm/d1'
 
 export default defineEventHandler(async (event) => {
   // 1) Authenticate
