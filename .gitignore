@@ -37,4 +37,9 @@ server/utils/ffmpeg.exe
 server/utils/ffplay.exe
 server/utils/ffprobe.exe
 
+dev.sqlite
+dev.sqlite-journal
+
+
+
 # (you may also want to ignore other .exe/.dll under site-packages)
