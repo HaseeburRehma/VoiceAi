@@ -24,4 +24,3 @@ export async function getDb() {
   throw new Error('No database available—did you bind D1?')
 }
 export const tables = schema
-export { sql, eq, and, or, desc } from 'drizzle-orm'
