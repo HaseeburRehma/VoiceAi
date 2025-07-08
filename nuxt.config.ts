@@ -29,12 +29,10 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
-   nitro: {
-    experimental: { wasm: true },
-    externals: {
-      // don’t bundle these into your worker
-      inline: [],
-      presets: ['cloudflare-pages'],
+  nitro: {
+    preset: 'cloudflare-pages',
+    experimental: {
+      wasm: true
     }
   },
 
