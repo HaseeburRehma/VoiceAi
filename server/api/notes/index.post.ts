@@ -1,7 +1,6 @@
 import { defineEventHandler, createError, setResponseStatus, readBody } from 'h3';
 import { noteSchema } from '#shared/schemas/note.schema';
 import { sendNoteNotification } from '../../utils/mailer';
-import { getDb, tables, sql, eq, desc, and } from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
   // 1) Auth

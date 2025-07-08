@@ -1,5 +1,4 @@
-import { defineEventHandler, createError } from 'h3';
-import { getDb, tables, sql, eq, desc, and } from '../../utils/db'
+
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);

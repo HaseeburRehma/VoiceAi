@@ -1,7 +1,6 @@
 import { defineEventHandler, createError, readBody, getRouterParam } from 'h3';
 import { z } from 'zod';
 import { notePatchSchema } from '#shared/schemas/note.schema';
-import { getDb, tables, sql, eq, desc, and } from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);

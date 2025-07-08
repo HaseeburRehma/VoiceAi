@@ -33,20 +33,7 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'cloudflare-pages',
     experimental: { wasm: true },
-    // Never bundle any of these in your edge function:
-    rollupConfig: {
-      external: (id) => {
-        return [
-          'better-sqlite3',
-          'drizzle-orm',
-          'drizzle-orm/better-sqlite3',
-          'drizzle-orm/sqlite-core',
-          'drizzle-orm/d1',
-        ].some(prefix => id === prefix || id.startsWith(prefix + '/'))
-      }
-    }
   },
-
 
   // Alternative: Configure build to handle @nuxthub/core properly
   build: {

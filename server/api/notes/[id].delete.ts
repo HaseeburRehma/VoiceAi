@@ -1,6 +1,5 @@
 import { defineEventHandler, createError, getRouterParam } from "h3";
 import { z } from "zod";
-import { getDb, tables, sql, eq, desc, and } from '../../utils/db'
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUserSession(event);
