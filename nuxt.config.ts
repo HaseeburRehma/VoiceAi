@@ -9,7 +9,7 @@ export default defineNuxtConfig({
 
   hub: {
     ai: true,
-    database: true,
+    database: false,
     blob: true,
   },
 
@@ -29,51 +29,12 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
-  nitro: {
-    experimental: {
-      wasm: true
-    },
-    // Completely exclude better-sqlite3 and related modules
+   nitro: {
+    experimental: { wasm: true },
     externals: {
-      inline: []
-    },
-    // Additional rollup options
-    rollupConfig: {
-      external: (id) => {
-        // Always externalize better-sqlite3 to prevent bundling
-        if (id === 'better-sqlite3' || id.includes('better-sqlite3')) {
-          return true
-        }
-        return false
-      },
-      plugins: [
-        // Configure impound to allow @nuxthub/core imports
-        {
-          name: 'allow-nuxthub-imports',
-          resolveId(id) {
-            if (id === '@nuxthub/core') {
-              return { id, external: false }
-            }
-            return null
-          }
-        },
-        // Plugin to handle better-sqlite3 imports
-        {
-          name: 'exclude-better-sqlite3',
-          resolveId(id) {
-            if (id === 'better-sqlite3') {
-              return { id, external: true }
-            }
-            return null
-          }
-        }
-      ]
-    },
-    // Additional configuration to prevent bundling
-    moduleSideEffects: false,
-    // Explicitly exclude from bundle
-    unenv: {
-      external: ['better-sqlite3']
+      // don’t bundle these into your worker
+      inline: [],
+      presets: ['cloudflare-pages'],
     }
   },
 

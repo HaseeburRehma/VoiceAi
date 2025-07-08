@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "nuxt build",
+   
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "npx nuxthub preview",
@@ -13,7 +13,9 @@
     "db:generate": "drizzle-kit generate",
     "reset:migrations": "ts-node-esm reset-migrations.ts",
     "db:migrate": "drizzle-kit migrate",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "migrate:d1": "drizzle-kit push    --config=drizzle.d1.config.ts",
+    "build":       "npm run migrate:d1 && nuxt build"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.15",
