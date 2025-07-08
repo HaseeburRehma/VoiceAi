@@ -1,3 +1,4 @@
+// server/database/schema.ts - Fixed version
 import crypto from "node:crypto";
 import { sql } from "drizzle-orm/sql";
 import { sqliteTable, text, unique } from "drizzle-orm/sqlite-core";
@@ -28,7 +29,7 @@ export const notes = sqliteTable("notes", {
     .primaryKey()
     .$defaultFn(() => "nt_" + crypto.randomBytes(12).toString("hex")),
   text: text("text").notNull(),
-  userId: text("user_id").references(() => users.id),
+  userId: text("user_id").references(() => users.id, { onDelete: "cascade" }),
   createdAt: text("created_at")
     .notNull()
     .default(sql`(CURRENT_TIMESTAMP)`),
@@ -36,10 +37,24 @@ export const notes = sqliteTable("notes", {
     .notNull()
     .default(sql`(CURRENT_TIMESTAMP)`)
     .$onUpdate(() => sql`(CURRENT_TIMESTAMP)`),
-  audioUrls: text("audio_urls", { mode: "json" }).$type<string[]>(),
+  audioUrls: text("audio_urls", { mode: "json" }).$type<string[]>().default("[]"),
   callerName: text("caller_name").notNull(),
   callerEmail: text("caller_email").notNull(),
   callerLocation: text("caller_location").notNull(),
   callerAddress: text("caller_address").notNull(),
   callReason: text("call_reason").notNull(),
 });
+
+// Relations
+import { relations } from "drizzle-orm/relations";
+
+export const notesRelations = relations(notes, ({one}) => ({
+  user: one(users, {
+    fields: [notes.userId],
+    references: [users.id]
+  }),
+}));
+
+export const usersRelations = relations(users, ({many}) => ({
+  notes: many(notes),
+}));

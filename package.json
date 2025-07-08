@@ -11,7 +11,9 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "db:generate": "drizzle-kit generate",
-    "reset:migrations": "ts-node-esm reset-migrations.ts"
+    "reset:migrations": "ts-node-esm reset-migrations.ts",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
   },
   "dependencies": {
     "@iconify-json/lucide": "^1.2.15",
@@ -43,7 +45,7 @@
     "tsx": "^4.20.3",
     "typescript": "^5.7.2",
     "vue-tsc": "^2.1.10",
-    "wrangler": "^3.90.0"
+    "wrangler": "^4.23.0"
   },
   "packageManager": "pnpm@9.12.2",
   "pnpm": {

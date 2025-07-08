@@ -1,3 +1,4 @@
+// nuxt.config.ts
 export default defineNuxtConfig({
   modules: ["@nuxthub/core", "@nuxt/eslint", "nuxt-auth-utils", "@nuxt/ui"],
 
@@ -28,16 +29,38 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
-  // Uncomment if you use Safari in dev
-  // Create the key and crt in the root dir using:
-  // 1. openssl genrsa 2048 > server.key
-  // 2. chmod 400 server.key
-  // 3. openssl req -new -x509 -nodes -sha256 -days 365 -key server.key -out server.crt
-  // More info: https://github.com/atinux/nuxt-auth-utils/issues/78#issuecomment-2059231741
-  // devServer: {
-  //   https: {
-  //     key: "./server.key",
-  //     cert: "./server.crt",
-  //   },
-  // },
+  nitro: {
+    experimental: {
+      wasm: true
+    }
+  },
+
+  // Runtime config for environment variables
+  runtimeConfig: {
+    // Private keys (only available on server-side)
+    sessionPassword: process.env.NUXT_SESSION_PASSWORD,
+    hubProjectKey: process.env.NUXT_HUB_PROJECT_KEY,
+    openaiApiKey: process.env.OPENAI_API_KEY,
+    cloudflareApiToken: process.env.CLOUDFLARE_API_TOKEN,
+    cloudflareAccountId: process.env.CLOUDFLARE_ACCOUNT_ID,
+    cloudflareD1Token: process.env.CLOUDFLARE_D1_TOKEN,
+    cloudflareD1DatabaseId: process.env.CLOUDFLARE_D1_DATABASE_ID,
+    twilioAccountSid: process.env.TWILIO_ACCOUNT_SID,
+    twilioAuthToken: process.env.TWILIO_AUTH_TOKEN,
+    twilioApiKeySid: process.env.TWILIO_API_KEY_SID,
+    twilioApiKeySecret: process.env.TWILIO_API_KEY_SECRET,
+    twilioTwimlAppSid: process.env.TWILIO_TWIML_APP_SID,
+    smtpHost: process.env.SMTP_HOST,
+    smtpPort: process.env.SMTP_PORT,
+    smtpUser: process.env.SMTP_USER,
+    smtpPassword: process.env.SMTP_PASSWORD,
+    smtpSecure: process.env.SMTP_SECURE,
+    adminEmail: process.env.ADMIN_EMAIL,
+    recaptchaSecretKey: process.env.RECAPTCHA_SECRET_KEY,
+    
+    public: {
+      // Public keys (exposed to client-side)
+      recaptchaSiteKey: process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY,
+    }
+  }
 });

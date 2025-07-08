@@ -1,4 +1,4 @@
-// server/utils/db.ts
+// server/utils/db.ts - Fixed version
 import { sql } from 'drizzle-orm'
 import * as schema from '../database/schema'
 
@@ -7,24 +7,36 @@ let _db: any = null
 export async function getDb() {
   if (_db) return _db
 
-  const useD1 = process.env.USE_D1 === 'true'        // now ALWAYS false during the build
-  const maybeDb = (globalThis as any).DB
-  const haveBinding = maybeDb && typeof maybeDb.prepare === 'function'
-
-  if (useD1 && haveBinding) {
+  // Check if we're in Cloudflare environment by looking for the DB binding
+  const cloudflareDb = (globalThis as any).DB
+  
+  if (cloudflareDb && typeof cloudflareDb.prepare === 'function') {
+    // Use Cloudflare D1 database
     const { drizzle } = await import('drizzle-orm/d1')
-    _db = drizzle(maybeDb, { schema })
+    _db = drizzle(cloudflareDb, { schema })
+    console.log('Connected to Cloudflare D1 database')
     return _db
   }
 
-  // fallback to SQLite
-  const { default: Database } = await import('better-sqlite3')
-  const { drizzle }           = await import('drizzle-orm/better-sqlite3')
-  _db = drizzle(new Database('dev.sqlite'), { schema })
+  // Local development with better-sqlite3
   try {
-    _db.execute(sql`DROP TABLE IF EXISTS drizzle_migrations;`)
-  } catch { /* ignore */ }
-  return _db
+    const { default: Database } = await import('better-sqlite3')
+    const { drizzle } = await import('drizzle-orm/better-sqlite3')
+    
+    // Ensure we have a valid database path for local development
+    const dbPath = process.env.NODE_ENV === 'development' ? 'dev.sqlite' : ':memory:'
+    
+    console.log('Using SQLite database:', dbPath)
+    
+    // Create database instance with proper error handling
+    const sqlite = new Database(dbPath)
+    _db = drizzle(sqlite, { schema })
+    
+    return _db
+  } catch (error) {
+    console.error('Failed to initialize database:', error)
+    throw new Error(`Database initialization failed: ${error.message}`)
+  }
 }
 
 export const tables = schema
