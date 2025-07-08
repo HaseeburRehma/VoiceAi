@@ -29,25 +29,28 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
-
   nitro: {
     preset: 'cloudflare-pages',
 
-    // 1️⃣ Force inline of Drizzle _and_ the unenv-preset runtime so they
-    //    don’t get left out as “externals” or tree-shaken away.
+    // 1) Switch to Webpack so bare imports don’t get dropped
+    bundler: 'webpack',
+
+    // 2) Ensure all of Drizzle + unenv runtime + bare specifiers get inlined
     externals: {
       inline: [
         'drizzle-orm/d1',
         'drizzle-orm/better-sqlite3',
-        '@cloudflare/unenv-preset/dist/runtime/node/process.mjs'
+        '@cloudflare/unenv-preset/dist/runtime/node/process.mjs',
+        'node:process',
+        'node:tls',
+        'cloudflare:worker'
       ]
     },
 
-    // 2️⃣ Disable ESBuild tree-shaking so that “sideEffects: false” modules
-    //    don’t have their imports stripped out.
+    // 3) Turn off ESBuild tree-shaking entirely (Webpack will handle it)
     esbuild: {
       treeShaking: false
-    }
+    },
   },
 
   build: {
@@ -56,7 +59,7 @@ export default defineNuxtConfig({
       'nuxt-auth-utils',
       'drizzle-orm'
     ]
-  }
+  },
   // Runtime config for environment variables
   runtimeConfig: {
     // Private keys (only available on server-side)
