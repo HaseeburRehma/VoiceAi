@@ -1,4 +1,4 @@
-// nuxt.config.ts
+// nuxt.config.ts - Updated with impound configuration
 export default defineNuxtConfig({
   modules: ["@nuxthub/core", "@nuxt/eslint", "nuxt-auth-utils", "@nuxt/ui"],
 
@@ -32,7 +32,32 @@ export default defineNuxtConfig({
   nitro: {
     experimental: {
       wasm: true
+    },
+    // Exclude better-sqlite3 from the build
+    externals: {
+      inline: ['better-sqlite3']
+    },
+    // Additional rollup options
+    rollupConfig: {
+      external: ['better-sqlite3'],
+      plugins: [
+        // Configure impound to allow @nuxthub/core imports
+        {
+          name: 'allow-nuxthub-imports',
+          resolveId(id) {
+            if (id === '@nuxthub/core') {
+              return { id, external: false }
+            }
+            return null
+          }
+        }
+      ]
     }
+  },
+
+  // Alternative: Configure build to handle @nuxthub/core properly
+  build: {
+    transpile: ['@nuxthub/core']
   },
 
   // Runtime config for environment variables
