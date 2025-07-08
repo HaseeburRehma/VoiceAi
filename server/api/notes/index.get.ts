@@ -2,7 +2,6 @@
 import { defineEventHandler, createError } from 'h3'
 import { getDb, tables } from '../../utils/db'
 import { eq, desc } from 'drizzle-orm/d1'
-import { requireUserSession } from 'h3-auth-utils'
 
 export default defineEventHandler(async (event) => {
   // 1) Authenticate
