@@ -33,13 +33,19 @@ export default defineNuxtConfig({
     experimental: {
       wasm: true
     },
-    // Exclude better-sqlite3 from the build
+    // Completely exclude better-sqlite3 and related modules
     externals: {
-      inline: ['better-sqlite3']
+      inline: []
     },
     // Additional rollup options
     rollupConfig: {
-      external: ['better-sqlite3'],
+      external: (id) => {
+        // Always externalize better-sqlite3 to prevent bundling
+        if (id === 'better-sqlite3' || id.includes('better-sqlite3')) {
+          return true
+        }
+        return false
+      },
       plugins: [
         // Configure impound to allow @nuxthub/core imports
         {
@@ -50,8 +56,24 @@ export default defineNuxtConfig({
             }
             return null
           }
+        },
+        // Plugin to handle better-sqlite3 imports
+        {
+          name: 'exclude-better-sqlite3',
+          resolveId(id) {
+            if (id === 'better-sqlite3') {
+              return { id, external: true }
+            }
+            return null
+          }
         }
       ]
+    },
+    // Additional configuration to prevent bundling
+    moduleSideEffects: false,
+    // Explicitly exclude from bundle
+    unenv: {
+      external: ['better-sqlite3']
     }
   },
 

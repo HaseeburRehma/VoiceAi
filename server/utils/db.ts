@@ -1,4 +1,4 @@
-// server/utils/db.ts - Fixed version using NuxtHub auto-imports
+// server/utils/db.ts - Production-ready database utility
 import { sql } from 'drizzle-orm'
 import * as schema from '../database/schema'
 
@@ -31,22 +31,15 @@ export async function getDb() {
     console.log('NuxtHub database not available:', error.message)
   }
 
-  // Third priority: Development environment with better-sqlite3
-  if (process.env.NODE_ENV === 'development' && typeof process !== 'undefined') {
+  // Third priority: Development environment - use separate local db utility
+  if (process.env.NODE_ENV === 'development') {
     try {
-      // Use eval to prevent bundling
-      const Database = await eval('import("better-sqlite3")').then((m: any) => m.default)
-      const { drizzle } = await import('drizzle-orm/better-sqlite3')
-      
-      const dbPath = 'dev.sqlite'
-      console.log('Using SQLite database:', dbPath)
-      
-      const sqlite = new Database(dbPath)
-      _db = drizzle(sqlite, { schema })
-      
+      const { getLocalDb } = await import('./localDb')
+      _db = await getLocalDb()
+      console.log('Connected to local development database')
       return _db
     } catch (error) {
-      console.error('Failed to initialize SQLite database:', error)
+      console.error('Failed to connect to local development database:', error)
     }
   }
 
