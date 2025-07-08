@@ -1,7 +1,10 @@
 // server/utils/db.ts
+import { drizzle as drizzleD1 } from 'drizzle-orm/d1'
+import { drizzle as drizzleBS3 } from 'drizzle-orm/better-sqlite3'
 import * as schema from '../database/schema'
 
 let _db: any = null
+console.log('🌐 D1 binding on globalThis:', (globalThis as any).DB)
 
 export async function getDb() {
   if (_db) return _db
@@ -9,16 +12,14 @@ export async function getDb() {
   // ⬇️ 1) Production: D1 binding from Pages
   const d1 = (globalThis as any).DB
   if (d1?.prepare) {
-    const { drizzle } = await import('drizzle-orm/d1')
-    return (_db = drizzle(d1, { schema }))
+    return (_db = drizzleD1(d1, { schema }))
   }
 
   // ⬇️ 2) Local: Better-SQLite3 (only in dev)
   if (process.env.NODE_ENV === 'development') {
-    const { default: Database }     = await import('better-sqlite3')
-    const { drizzle }               = await import('drizzle-orm/better-sqlite3')
+    const Database = (await import('better-sqlite3')).default
     const sqlite = new Database('dev.sqlite')
-    return (_db = drizzle(sqlite, { schema }))
+    return (_db = drizzleBS3(sqlite, { schema }))
   }
 
   throw new Error('No database available—did you bind D1?')
